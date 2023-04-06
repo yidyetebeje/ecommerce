@@ -2,16 +2,24 @@ import { createApi, fakeBaseQuery } from "@reduxjs/toolkit/query/react";
 import { arrayUnion, doc, getDoc, getDocs, setDoc, collection, updateDoc } from "firebase/firestore";
 import { db , app} from "../../firebase/firebase";
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, GoogleAuthProvider, Auth, signInWithPopup } from "firebase/auth";
-
+import { store } from "../../store";
+import { setLoginStatus } from "../../features/auth/authSlice";
+export interface ResponseState {
+    data: any;
+    isSuccess: boolean;
+    isError: boolean;
+    error: string | null;
+}
 export const authApi = createApi({
     baseQuery: fakeBaseQuery(),
     endpoints: (builder) => ({
-        signIn: builder.mutation<any, { email: string; password: string }>({
+        signIn: builder.mutation<any, { email: string; password: string; }>({
             async queryFn({ email, password }) {
                 try {
                     const auth = getAuth(app);
                     const authenticate = await signInWithEmailAndPassword(auth, email, password);
                     const user = authenticate.user;
+                    store.dispatch(setLoginStatus({ isLoggedIn: true, user }));
                     return { data: { user } };
                 }
                 catch (error: any) {
@@ -21,7 +29,7 @@ export const authApi = createApi({
             }
         }),
         signUp: builder.mutation<any, { email: string; password: string }>({
-            async queryFn({ email, password }) {
+            async queryFn({ email, password }): Promise<ResponseState> {
                 try {
                     const auth = getAuth(app);
                     const authenticate = await createUserWithEmailAndPassword(auth, email, password);
@@ -34,10 +42,10 @@ export const authApi = createApi({
                         cart: [],
                         wishlist: []
                     });
-                    return { data: { user }, isSuccess: true };
+                    return { data: { user }, isSuccess: true, isError: false, error: null };
                 }
                 catch (error: any) {
-                    return { error: error.message, data: null, isSuccess:false };
+                    return { error: error.message, data: null, isSuccess:false , isError: true};
                 }
             }
         }),
@@ -50,6 +58,7 @@ export const authApi = createApi({
                     const credential = GoogleAuthProvider.credentialFromResult(authenticate);
                     const token = credential?.accessToken;
                     const user = authenticate.user;
+                    store.dispatch(setLoginStatus({ isLoggedIn: true, user }));
                     return { data: { user, token }, isSuccess: true, error: null };
                 } 
                 catch (error: any) {

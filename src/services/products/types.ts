@@ -1,15 +1,21 @@
 export interface Product {
-    id: string,
+    id?: string,
     title: string,
     price: number,
-    category: Category,
+    category: string,
     description: string,
     image: string,
     status: Status,
+    brand: string,
+    stock: number,
+    rating: number,
+    numReviews: number,
+    isFeatured?: boolean,
+    postedBy?: string,
 }
-interface Category {
+export interface Category {
     id: string,
-    name: string,
+    category: string,
 }
 export enum Status {
     NEW,

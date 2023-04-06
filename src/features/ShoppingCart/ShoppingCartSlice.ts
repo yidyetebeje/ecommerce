@@ -1,53 +1,60 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { startTrackValue } from '@testing-library/user-event/dist/types/document/trackValue';
+import { Product } from '../../services/products/types';
 
 export interface ShoppingCartState {
     items?: items[];
+    modalState: boolean;
 }
 export interface items {
-    productId: string,
+    product: Product,
     amount: number,
 }
 export interface ModifyAmount {
-    productId: string, 
+    id: string, 
     by: number,
 }
 
-const initialState: items[] = [{
-    productId: 'steingjksn',
-    amount: 1
-}];
+const initialState: ShoppingCartState = {
+    items: [],
+    modalState: false,
+};
 export const shoppingCartSlice = createSlice({
     initialState,
     name: 'shoppingCart',
     reducers: {
-        addToCart: (state, action: PayloadAction<string>) => {
-            let exist = state.find(item => item.productId == action.payload);
-            if(exist) return state;
-            state.push({
-                productId: action.payload,
-                amount: 1,
-            })
+        addToCart: (state, action: PayloadAction<Product>) => {
+            let exist = state.items?.find(item => item.product.id === action.payload.id);
+            if (!exist) {
+                state.items?.push({ product: action.payload, amount: 1 });
+            }
         },
         removeToCart: (state, action: PayloadAction<string>) => {
-            state = state.filter(item => item.productId !== action.payload)
-            return state;
+            let exist = state.items?.find(item => item.product.id === action.payload);
+            if (exist) {
+                state.items?.splice(state.items?.indexOf(exist), 1);
+            }
         },
         increment: (state, action: PayloadAction<ModifyAmount>) => {
-            state.forEach(item => {
-                if (item.productId == action.payload.productId) {
+            state.items?.forEach(item => {
+                if (item.product.id == action.payload.id) {
                     item.amount += action.payload.by;
                 }
-            })   
+            })    
         },
         decrement: (state, action: PayloadAction<ModifyAmount>) => {
-            state.forEach(item => {
-                if (item.productId == action.payload.productId) {
-                    item.amount -= action.payload.by;
+            state.items?.forEach(item => {
+                if (item.product.id == action.payload.id) {
+                    if (item.amount > 1) {
+                        item.amount -= action.payload.by;
+                    }
                 }
-            })      
+            })     
+        },
+        toggleModalState: (state, action: PayloadAction<boolean>) => {
+            state.modalState = action.payload;
         }
     }
 })
-export const { addToCart, removeToCart, decrement, increment } = shoppingCartSlice.actions;
+export const { addToCart, removeToCart, decrement, increment, toggleModalState } = shoppingCartSlice.actions;
 export default shoppingCartSlice.reducer;

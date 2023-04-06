@@ -6,12 +6,16 @@ import { docsApi } from './services/docs'
 import { productsApi } from './services/products/products'
 import shoppingCartReducer from './features/ShoppingCart/ShoppingCartSlice'
 import { authApi } from './services/auth/auth'
+import authReducer from './features/auth/authSlice'
+import productReducer from './features/Products/productSlice'
 export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(docsApi.middleware, productsApi.middleware, authApi.middleware),
   reducer: {
     counter: counterReducer,
     shoppingCart: shoppingCartReducer,
+    auth: authReducer,
+    product: productReducer,
     [docsApi.reducerPath]: docsApi.reducer,
     [productsApi.reducerPath]: productsApi.reducer,
     [authApi.reducerPath]: authApi.reducer,
