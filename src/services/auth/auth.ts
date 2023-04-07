@@ -58,7 +58,18 @@ export const authApi = createApi({
                     const credential = GoogleAuthProvider.credentialFromResult(authenticate);
                     const token = credential?.accessToken;
                     const user = authenticate.user;
-                    store.dispatch(setLoginStatus({ isLoggedIn: true, user }));
+                    const ref = doc(db, 'users', user?.uid);
+                    const docSnapShot = await getDoc(ref);
+                    if (!docSnapShot.exists()) {
+                        await setDoc(ref, {
+                            email: user?.email,
+                            name: user?.displayName,
+                            photo: user?.photoURL,
+                            cart: [],
+                            wishlist: []
+                        });
+                    }
+                    store.dispatch(setLoginStatus({ isLoggedIn: true, user , loading:false}));
                     return { data: { user, token }, isSuccess: true, error: null };
                 } 
                 catch (error: any) {

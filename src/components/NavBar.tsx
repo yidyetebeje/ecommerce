@@ -1,17 +1,21 @@
 import { getAuth, onAuthStateChanged, User } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 import { filterProducts } from "../features/Products/productSlice";
 
 import { app } from "../firebase/firebase";
 import useAuth from "../hooks and utils/useAuth";
 import { AppDispatch, RootState } from "../store";
+import Spinner from "./base/Spinner";
 import SearchInput from "./SearchInput"
 import ShoppingCartIcon from "./ShoppingCartIcon";
 
 export default function NavBar() {
     const loggedUser = useSelector((state: RootState) => state.auth);
     const dispatch: AppDispatch = useDispatch();   
+    console.log(loggedUser)
+    const defaultProfile = "https://icon-library.com/images/default-profile-icon/default-profile-icon-24.jpg";
     return (
         <nav className="fixed top-0 z-50 w-full border-b border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800">
             <div className="px-3 py-3 lg:px-5 lg:pl-3">
@@ -39,21 +43,21 @@ export default function NavBar() {
                                 ></path>
                             </svg>
                         </button>
-                        <a href="https://flowbite.com" className="ml-2 flex md:mr-24">
+                        <Link to="/" className="ml-2 flex md:mr-24">
                             <img
                                 src="https://flowbite.com/docs/images/logo.svg"
                                 className="mr-3 h-8"
                                 alt="FlowBite Logo"
                             />
                             <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white sm:text-2xl">
-                                Flowbite
+                                MelMart
                             </span>
-                        </a>
+                        </Link>
                     </div>
                     <div className="flex items-center">
                         <SearchInput />
                         <ShoppingCartIcon/>
-                        {!loggedUser.isLoggedIn ? "not signed in" :
+                        {loggedUser.loading ? <Spinner></Spinner> : !loggedUser.isLoggedIn ? "not signed in" :
                             <div className="ml-3 flex items-center">
                                 <div>
                                     <button
@@ -65,7 +69,7 @@ export default function NavBar() {
                                         <span className="sr-only">Open user menu</span>
                                         <img
                                             className="h-8 w-8 rounded-full"
-                                            src="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
+                                            src={loggedUser.user?.photoURL || defaultProfile}
                                             alt="user photo"
                                         />
                                     </button>

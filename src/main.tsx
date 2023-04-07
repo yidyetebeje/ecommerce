@@ -21,6 +21,7 @@ import ProtectedRoute from './hooks and utils/ProtectedRoute'
 import HomeLayOut from './components/layouts/HomeLayOut'
 import DetailPage from './components/DetailPage'
 import ShoppingCartComp from './components/ShoppingCart'
+import ListUserProduct from './components/ListUserProduct'
 
 const router = createBrowserRouter([
   {

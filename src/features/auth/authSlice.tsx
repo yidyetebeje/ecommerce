@@ -4,12 +4,14 @@ import { getAuth, onAuthStateChanged, User } from 'firebase/auth'
 import { app } from '../../firebase/firebase'
 import { AppDispatch, RootState, store } from '../../store'
 export interface AuthState {
-    isLoggedIn: boolean,
-    user: User | null
+    isLoggedIn: boolean;
+    user: User | null;
+    loading: boolean;
 }
 const initialState: AuthState = {
     isLoggedIn: false,
-    user: null
+    user: null,
+    loading: true,
 };
 const auth = getAuth(app);
 const unregisterAuthObserver = onAuthStateChanged(auth, (user) => {
@@ -26,9 +28,9 @@ const unregisterAuthObserver = onAuthStateChanged(auth, (user) => {
             providerId,
             uid
         }
-        store.dispatch(setLoginStatus({ isLoggedIn: true, user:userObj }));
+        store.dispatch(setLoginStatus({ isLoggedIn: true, user:userObj, loading: false }));
     }
-    else store.dispatch(setLoginStatus({ isLoggedIn: false, user: null }));
+    else store.dispatch(setLoginStatus({ isLoggedIn: false, user: null, loading: false }));
 });
 unregisterAuthObserver();
 export const authSlice = createSlice({
@@ -38,6 +40,7 @@ export const authSlice = createSlice({
         setLoginStatus: (state, action: PayloadAction<AuthState>) => {
             state.isLoggedIn = action.payload.isLoggedIn;
             state.user = action.payload.user;
+            state.loading = action.payload.loading;
         }
     },
 })

@@ -6,8 +6,8 @@ import RadioGroup from "./base/RadioGroup";
 export default function ProductFilterByStatus() {
     const options = [
         { value: "all", label: "All" },
-        { value: "new", label: "New" },
-        { value: "used", label: "Used" },
+        { value: "0", label: "New" },
+        { value: "1", label: "Used" },
         
     ];
     const [value, setValue] = useState("all");

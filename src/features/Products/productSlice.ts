@@ -67,7 +67,7 @@ export const productSlice = createSlice({
                 tempProducts = tempProducts.filter((product) => product.category === category);
             }
             if (status !== 'all') {
-                tempProducts = tempProducts.filter((product) => product.status === status);
+                tempProducts = tempProducts.filter((product) => product.status == status);
             }
             if (search !== '') {
                 const fuse = new Fuse(tempProducts, {

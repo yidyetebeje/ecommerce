@@ -1,6 +1,10 @@
 import { Product } from "../features/Products/productSlice";
-
+import { useRemoveProductMutation } from "../services/products/products";
 export default function ({ product }: { product: Product }) {
+    let [removeItem, status] = useRemoveProductMutation();
+    const removeProduct = () => {
+        removeItem(product.id);
+    }
     return (
         <div className="flex justify-between">
             <div className="flex">
@@ -30,7 +34,9 @@ export default function ({ product }: { product: Product }) {
 
             </div>
 
-            <button className="font-medium text-red-600 hover:text-red-500 py-1 px-4">x delete</button>
+            <button
+                onClick={removeProduct}
+                className="font-medium text-red-600 hover:text-red-500 py-1 px-4">x delete</button>
 
         </div>
 

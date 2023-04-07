@@ -1,15 +1,18 @@
 import { useEffect } from "react";
+import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { items, removeToCart } from "../features/ShoppingCart/ShoppingCartSlice";
+import { RootState } from "../store";
 import Counter from "./Counter";
 
 export default function CartProduct({ cartItem }: { cartItem: items }) {
     const { product, amount } = cartItem;
     const { title, price, image } = product;
     const dispatch = useDispatch();
+    
     const removeItem = () => {
-        dispatch(removeToCart(product.id ? product.id : ""));
+            dispatch(removeToCart(product.id));
     }
     return (
         <div className="flex">
@@ -26,7 +29,7 @@ export default function CartProduct({ cartItem }: { cartItem: items }) {
                                 to={`/products/${product.id}`}
                             >{title}</Link>
                         </h3>
-                        <p className="ml-4">${Intl.NumberFormat().format(price)}</p>
+                        <p className="ml-4">{Intl.NumberFormat().format(price)}<span className=" text-sm text-gray-400">ETB</span></p>
                     </div>
                 </div>
                 <div className="flex flex-1 items-end justify-between text-sm">

@@ -1,5 +1,6 @@
 import { createApi, fakeBaseQuery } from "@reduxjs/toolkit/query/react";
-import { arrayUnion, doc, getDoc, getDocs, setDoc, collection, updateDoc, addDoc } from "firebase/firestore";
+import { tab } from "@testing-library/user-event/dist/types/convenience";
+import { arrayUnion, doc, getDoc, getDocs, setDoc, collection, updateDoc, addDoc, deleteDoc } from "firebase/firestore";
 import { setProducts } from "../../features/Products/productSlice";
 
 import { db } from "../../firebase/firebase";
@@ -10,6 +11,7 @@ import { Product } from "./types";
 
 export const productsApi = createApi({
     baseQuery: fakeBaseQuery(),
+    tagTypes: ['Products'],
     endpoints: (builder) => ({
         getProducts: builder.query<Product[], void>({
             async queryFn() {
@@ -31,7 +33,8 @@ export const productsApi = createApi({
                     console.log(error.message);
                     return { error: error.message };
                 }
-            }
+            },
+            providesTags: ['Products']
         }),
         getProduct: builder.query<Product,string>({
             async queryFn(id: string): Promise<{ data: Product; error?: undefined; } | { error: any; data?: undefined; }> {
@@ -42,12 +45,16 @@ export const productsApi = createApi({
                     const category = await getDoc(doc(db, 'categories', product?.category));
                     let c = await category.data();
                     const postedBy = await getDoc(doc(db, 'users', product?.postedBy));
-                    let p = await postedBy.data();
-                    return { data: product as Product };
+                    let p = {
+                        id: postedBy.id,
+                        ...postedBy.data()
+                    }
+                    return { data: { id: docSnapShot.id, ...product, category: c?.category, postedBy: p.email } };
                 } catch (error: any) {
                     return { error: error.message };
                 }
-            }
+            },
+            providesTags: ['Products']
         }),
         getProductsByPostedBy: builder.query<Product[], string>({
             async queryFn(id: string) {
@@ -67,7 +74,8 @@ export const productsApi = createApi({
                 } catch (error: any) {
                     return { error: error.message };
                 }
-            }
+            },
+            providesTags: ['Products']
         }),
         getCategories: builder.query<Category[], void>({
             async queryFn() {
@@ -97,9 +105,22 @@ export const productsApi = createApi({
                 } catch (error: any) {
                     return { error: error.message };
                 }
-            }
-        })
+            },
+            invalidatesTags: ['Products']
+        }),
+        removeProduct: builder.mutation<Product, string>({
+            async queryFn(id: string) {
+                try {
+                    const ref = doc(db, 'products', id);
+                    await deleteDoc(ref);
+                    return { data: {} as Product };
+                } catch (error: any) {
+                    return { error: error.message };
+                }
+            },
+            invalidatesTags: ['Products']
+        }),
     }),
     reducerPath: 'productsApi',
 });
-export const { useGetProductsQuery, useGetProductQuery, useGetCategoriesQuery, usePostProductMutation, useGetProductsByPostedByQuery } = productsApi;
+export const {useRemoveProductMutation, useGetProductsQuery, useGetProductQuery, useGetCategoriesQuery, usePostProductMutation, useGetProductsByPostedByQuery } = productsApi;

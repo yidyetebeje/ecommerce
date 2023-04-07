@@ -33,9 +33,6 @@ export default function HomeLayOut() {
                   
                 ></ProductFilterByStatus> 
         </div>
-        <div>
-          <MinMaxRangeSlider/>
-        </div>
          </div>
       <div className="mb-4 flex items-center justify-start rounded bg-gray-50 dark:bg-gray-800 flex-wrap gap-2">
         {isLoading ? <Spinner></Spinner> : 

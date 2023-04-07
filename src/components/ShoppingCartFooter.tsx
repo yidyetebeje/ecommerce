@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 export default function ShoppingCartFooter({ total }: { total: number }) {
     return (
         <div className="border-t border-gray-200 px-4 py-6 sm:px-6">
@@ -12,10 +14,12 @@ export default function ShoppingCartFooter({ total }: { total: number }) {
             <div className="mt-6 flex justify-center text-center text-sm text-gray-500">
                 <p>
                     or
-                    <button type="button" className="font-medium text-indigo-600 hover:text-indigo-500">
+                    <Link
+                        to="/"
+                        type="button" className="font-medium text-indigo-600 hover:text-indigo-500">
                         Continue Shopping
                         <span aria-hidden="true"> &rarr;</span>
-                    </button>
+                    </Link>
                 </p>
             </div>
         </div>
