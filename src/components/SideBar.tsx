@@ -91,7 +91,7 @@ export default function SideBar() {
                 clip-rule="evenodd"
               ></path>
             </svg>}
-            name="log out" to={""}            />
+            name="log out" />
           </li> :
             <>
               <li>

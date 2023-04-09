@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { filterProducts } from "../features/Products/productSlice";
+import { Category, FilterInterface, filterProducts } from "../features/Products/productSlice";
 import Select from "./base/Select";
 
-export default function ProductFilterByCategory({ isLoading, categories }: { isLoading:boolean,setFilterBy: (filterBy: FilterInterface) => void, filterBy: FilterInterface, categories: Category[] }) {
+export default function ProductFilterByCategory({ isLoading, categories }: { isLoading:boolean, categories: Category[] | undefined }) {
     const [category, setCategory] = useState("all");
     const dispatch = useDispatch();
     const handleChange = (id:string) => {

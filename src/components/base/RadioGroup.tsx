@@ -1,4 +1,4 @@
-export default function RadioGroup({ name, options, value, onChange }) {
+export default function RadioGroup({ name, options, value, onChange }: { name: string; options: { value: string; label: string; }[]; value: string; onChange: any; }) {
   return (
     <div className="flex items-center justify-start rounded bg-gray-50 dark:bg-gray-800 flex-wrap gap-2 h-12 px-6">
       {options.map((option) => (

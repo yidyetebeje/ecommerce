@@ -1,5 +1,5 @@
 
-export default function SideBarButton({name, SVG, onClick }: { to: string, name: string, SVG: React.FC, onClick?: () => void }) {
+export default function SideBarButton({name, SVG, onClick }: { name: string, SVG: React.FC, onClick?: () => void }) {
     return (
         <button
             onClick={onClick}

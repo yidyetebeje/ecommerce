@@ -5,6 +5,8 @@ import { filterProducts } from "../features/Products/productSlice";
 export default function SearchInput() {
     const [searchTerm, setSearchTerm] = useState("");
     const dispatch = useDispatch();
+
+    // @ts-ignore
     const handleSearch = (e) => {
         setSearchTerm(e.target.value);
     }

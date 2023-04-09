@@ -1,9 +1,9 @@
-import { Product } from "../features/Products/productSlice";
+import { Product } from "../services/products/types";
 import { useRemoveProductMutation } from "../services/products/products";
 export default function ({ product }: { product: Product }) {
     let [removeItem, status] = useRemoveProductMutation();
     const removeProduct = () => {
-        removeItem(product.id);
+        removeItem(product.id as string);
     }
     return (
         <div className="flex justify-between">

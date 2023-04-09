@@ -41,10 +41,13 @@ export default function CreateProduct() {
         title: '',
         description: '',
         stock: '',
+        price: ''
     })
+    // @ts-ignore
     function handleChange(event) {
         setImage(event.target.files[0]);
     }
+    // @ts-ignore
     const handleSubmision = async (e) => {
         console.log("submit button clicked")
         e.preventDefault();
@@ -100,7 +103,7 @@ export default function CreateProduct() {
                     rating: 0,
                     numReviews: 0,
                     isFeatured: true,
-                    postedBy: loggedInUser.uid,
+                    postedBy: loggedInUser?.uid,
                 })
                 setLoading(false);
                 setPercent(0);
@@ -128,20 +131,18 @@ export default function CreateProduct() {
             {
                 uploadStatus.isError && <ErrorToast message="something went wrong" />
             }
-            {authState.loading ? <LoadingOverLay /> :
+            {authState.loading ? <LoadingOverLay > ""</LoadingOverLay> :
                 <div className="py-8 px-4 mx-auto max-w-2xl lg:py-16">
                     <h2 className="mb-4 text-xl font-bold text-gray-900 dark:text-white">Add a new product</h2>
                     <div className="grid gap-4 sm:grid-cols-2 sm:gap-6">
                         <div className="sm:col-span-2">
                             <Input
-                            value={title}
+                                value={title}
                                 label="title"
                                 placeholder="Type product name"
                                 onChange={setTitle}
                                 error={formError.title}
-                            >
-                            </Input>
-
+                            />
                         </div>
                         <div className="w-full">
                             <Input
@@ -158,7 +159,7 @@ export default function CreateProduct() {
                                 placeholder="2999 etb"
                                 onChange={setPrice}
                                 type="number"
-                                value={price}
+                                value={price.toString()}
                                 error={formError.price}
                             />
 

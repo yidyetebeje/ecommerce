@@ -28,6 +28,7 @@ const unregisterAuthObserver = onAuthStateChanged(auth, (user) => {
             providerId,
             uid
         }
+        // @ts-ignore
         store.dispatch(setLoginStatus({ isLoggedIn: true, user:userObj, loading: false }));
     }
     else store.dispatch(setLoginStatus({ isLoggedIn: false, user: null, loading: false }));

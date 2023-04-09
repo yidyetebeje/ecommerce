@@ -12,7 +12,7 @@ export default function CartProduct({ cartItem }: { cartItem: items }) {
     const dispatch = useDispatch();
     
     const removeItem = () => {
-            dispatch(removeToCart(product.id));
+        dispatch(removeToCart(product?.id ? product?.id : ""));
     }
     return (
         <div className="flex">

@@ -3,6 +3,7 @@ import { useSignInMutation } from "../services/auth/auth";
 import React, { useState } from "react";
 import SignInWithGoogle from "./SignInWithGoogle";
 import Spinner from "./base/Spinner";
+import ErrorToast from "./base/ErrorToast";
 export default function Login() {
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
@@ -16,11 +17,13 @@ export default function Login() {
     // disabel button
         try {
             setLoading(true);
-            const authenticate = await signInWithEmailAndPassword({ email, password } );
+            const authenticate = await signInWithEmailAndPassword({ email, password });
+            // @ts-ignore
             if (authenticate?.error == null) {
                 navigate('/');
             }
         } catch (error) {
+            // @ts-ignore
             setError(error.message);
         } finally {
             setLoading(false);
@@ -65,8 +68,8 @@ export default function Login() {
                             <SignInWithGoogle/>
                             <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                                 Don’t have an account yet? <Link to="/register" className="font-medium text-primary-600 hover:underline dark:text-primary-500">Sign up</Link>
-                                {status.isError && <h1>{status?.error}</h1>}
                             </p>
+                            {error && <ErrorToast message={error} />}
                         </form>
                     </div>
                 </div>

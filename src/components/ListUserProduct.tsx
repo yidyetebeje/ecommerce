@@ -6,7 +6,7 @@ import UserProduct from "./UserProduct";
 
 export default function ListUserProduct({ isOpen, toggleModal }: { isOpen: boolean;  toggleModal: (value: boolean) => void}) {
     const user = useSelector((state: RootState) => state.auth.user);
-    const { data, error, isLoading } = useGetProductsByPostedByQuery(user?.uid);
+    const { data, error, isLoading } = useGetProductsByPostedByQuery(user?.uid ? user?.uid  : "");
     let handleModal = () => {
         toggleModal(false);
     }
@@ -73,12 +73,14 @@ export default function ListUserProduct({ isOpen, toggleModal }: { isOpen: boole
                             <div className="p-6 space-y-6  max-h-96 overflow-y-auto">
                                 <div
                                     className="-my-6 divide-y divide-gray-200 w-full text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                                    {isLoading && <div>Loading...</div>}
-                                    {error && <div>Error: {error}</div>}
+                                   
                                     {data && data.map((product) => (
                                         <UserProduct key={product.id} product={product} />
                                     ))}
-                                    {data && data.length === 0 && <div className="text-center">No product posted by you</div>}
+                                    {data && data.length === 0 && <div className="text-center">
+                                        No product posted by you
+                                    </div>}
+                                    
                                 </div>
                             </div>
                         }

@@ -1,7 +1,7 @@
 import { createApi, fakeBaseQuery } from "@reduxjs/toolkit/query/react";
 import { arrayUnion, doc, getDoc, getDocs, setDoc, collection, updateDoc } from "firebase/firestore";
 import { db , app} from "../../firebase/firebase";
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, GoogleAuthProvider, Auth, signInWithPopup } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, GoogleAuthProvider, Auth, signInWithPopup, User } from "firebase/auth";
 import { store } from "../../store";
 import { setLoginStatus } from "../../features/auth/authSlice";
 export interface ResponseState {
@@ -19,12 +19,12 @@ export const authApi = createApi({
                     const auth = getAuth(app);
                     const authenticate = await signInWithEmailAndPassword(auth, email, password);
                     const user = authenticate.user;
-                    store.dispatch(setLoginStatus({ isLoggedIn: true, user }));
+                    store.dispatch(setLoginStatus({ isLoggedIn: true, user, loading: false }));
                     return { data: { user } };
                 }
                 catch (error: any) {
                     console.log(error.message);
-                    return { error: error.message };
+                    return { error: error.message as string };
                 }
             }
         }),
@@ -49,7 +49,8 @@ export const authApi = createApi({
                 }
             }
         }),
-        signInWithGoogle: builder.mutation<any, void>({
+        signInWithGoogle: builder.mutation<Promise<{ data: { user: User; token: string | undefined; }; error?: undefined; isSuccess?: undefined; } | { error: any; isSuccess: boolean; data: null; }>, void>({
+            // @ts-ignore
             async queryFn() {
                 try {
                     const auth = getAuth(app);
@@ -70,10 +71,10 @@ export const authApi = createApi({
                         });
                     }
                     store.dispatch(setLoginStatus({ isLoggedIn: true, user , loading:false}));
-                    return { data: { user, token }, isSuccess: true, error: null };
+                    return { data: { user, token }};
                 } 
                 catch (error: any) {
-                    return { error: error.message, isSuccess: false, data: null };
+                    return {error: error.message};
                 }
             }
         })

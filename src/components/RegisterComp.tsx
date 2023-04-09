@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSignUpMutation } from "../services/auth/auth";
 
@@ -8,12 +8,17 @@ export default function RegisterComp() {
     const [confirmPassword, setConfirmPassword] = useState<string>('');
     const [signUpWithEmailAndPassword, status] = useSignUpMutation();
     const navigate = useNavigate();
-    const handleRegister = async (e) => {
+    const handleRegister = async (e: React.MouseEvent) => {
         e.preventDefault();
         if (email != '' && password != '' && confirmPassword != '' && password === confirmPassword) {
-            let authenticate = await signUpWithEmailAndPassword({ email, password });
-            if (authenticate.error == null) {
-                navigate('/login');
+            try {
+                let authenticate = await signUpWithEmailAndPassword({ email, password });
+                // @ts-ignore
+                if (authenticate?.error == null) {
+                    navigate('/login');
+                }
+            } catch (error) {
+                console.log(error);
             }
         }
         else {
@@ -57,7 +62,6 @@ export default function RegisterComp() {
                             <button type="submit" className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800" onClick={(e)=> handleRegister(e)}>Create an account</button>
                             <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                                 Already have an account? <Link to='/login' className="font-medium text-primary-600 hover:underline dark:text-primary-500">Login here</Link>
-                                <h1>{status?.isError && status.error}</h1>
                                 <h1>{status.isSuccess && "registered successfully"}</h1>
                             </p>
                         </form>

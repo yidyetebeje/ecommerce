@@ -64,9 +64,11 @@ export const productSlice = createSlice({
             let tempProducts = JSON.parse(JSON.stringify(state.products)) as Product[];
 
             if (category !== 'all') {
+                // @ts-ignore
                 tempProducts = tempProducts.filter((product) => product.category === category);
             }
             if (status !== 'all') {
+                // @ts-ignore
                 tempProducts = tempProducts.filter((product) => product.status == status);
             }
             if (search !== '') {

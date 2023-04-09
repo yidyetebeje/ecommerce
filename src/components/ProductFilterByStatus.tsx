@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { FilterInterface, filterProducts } from "../features/Products/productSlice";
 import RadioGroup from "./base/RadioGroup";
@@ -12,7 +12,7 @@ export default function ProductFilterByStatus() {
     ];
     const [value, setValue] = useState("all");
     const dispatch = useDispatch();
-    const handleChange = (e) => {
+    const handleChange = (e:any) => {
         setValue(e.target.value);
     }
     //debounce
